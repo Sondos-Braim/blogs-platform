@@ -12,7 +12,6 @@ interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
-// Get current user profile
 router.get('/profile', authenticate, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const user = await userService.getUserById(req.user.id);
@@ -25,7 +24,6 @@ router.get('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
   }
 });
 
-// Get user by ID (public profile)
 router.get('/:id',
   [param('id').isString().isLength({ min: 1 })],
   validateRequest,
@@ -42,14 +40,12 @@ router.get('/:id',
   }
 );
 
-// Update user profile (authenticated users can only update their own profile)
 router.put('/profile', 
   authenticate,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { name, email } = req.body;
       
-      // Users can only update their own profile
       const updatedUser = await userService.updateUser(req.user.id, { name, email });
       if (!updatedUser) {
         return res.status(404).json({ error: 'User not found' });
@@ -62,7 +58,6 @@ router.put('/profile',
   }
 );
 
-// Get user's posts
 router.get('/:id/posts',
   [param('id').isString().isLength({ min: 1 })],
   validateRequest,

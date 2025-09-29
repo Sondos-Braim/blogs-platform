@@ -30,7 +30,6 @@ const initialState: PostsState = {
   error: null,
 };
 
-// Async thunks
 export const fetchPosts = createAsyncThunk(
   'posts/fetchPosts',
   async (_, { rejectWithValue }) => {
@@ -104,7 +103,6 @@ const postsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Posts
       .addCase(fetchPosts.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -118,7 +116,6 @@ const postsSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Fetch Post by ID
       .addCase(fetchPostById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -132,11 +129,9 @@ const postsSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Create Post
       .addCase(createPost.fulfilled, (state, action: PayloadAction<Post>) => {
         state.posts.unshift(action.payload);
       })
-      // Update Post
       .addCase(updatePost.fulfilled, (state, action: PayloadAction<Post>) => {
         const index = state.posts.findIndex(post => post.id === action.payload.id);
         if (index !== -1) {
@@ -146,7 +141,6 @@ const postsSlice = createSlice({
           state.currentPost = action.payload;
         }
       })
-      // Delete Post
       .addCase(deletePost.fulfilled, (state, action: PayloadAction<string>) => {
         state.posts = state.posts.filter(post => post.id !== action.payload);
         if (state.currentPost?.id === action.payload) {

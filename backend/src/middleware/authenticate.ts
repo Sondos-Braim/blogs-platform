@@ -4,7 +4,6 @@ import { prisma } from '../utils/prisma';
 
 const authService = new AuthService(prisma);
 
-// Extend the Request interface to include user
 interface AuthenticatedRequest extends Request {
   user?: any;
 }

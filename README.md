@@ -1,57 +1,131 @@
 # Blog Platform
 
-A full-stack blogging platform built with Next.js, Node.js, and PostgreSQL.
+A full-stack blogging platform with authentication and post management.
 
-## Development Setup
+## Live Demo
+- **Frontend**: 
+- **Backend API**: 
 
-1. Clone the repository
-2. Run `npm install` in both frontend and backend directories
-3. Set up PostgreSQL database
-4. Configure environment variables
-5. Run `docker-compose up` or use individual start commands
+## Tech Stack
 
-## Available Scripts
+### Frontend:
+- **Next.js 14**
+- **Redux Toolkit**
+- **Tailwind CSS**
 
-- `npm run dev` - Start both frontend and backend in development
-- `npm run build` - Build both applications
+### Backend:
+- **Node.js**
+- **Express**
+- **Prisma ORM**
 
-# System Design
+### Database:
+- **PostgreSQL** (Supabase)
 
-## Architecture Overview
+### Auth:
+- **JWT tokens**
 
-The application follows a client-server architecture with separate frontend and backend services.
+### Deployment:
+- **Vercel** for Frontend
+- **Render** for Backend
 
-### Components
+## Quick Setup
 
-1. **Frontend (Next.js)**
-   - Pages routing with App Router
-   - Redux for global state management
-   - API client for backend communication
-   - Responsive UI components
+### Backend
 
-2. **Backend (Node.js/Express)**
-   - RESTful API endpoints
-   - JWT-based authentication
-   - Prisma ORM for database operations
-   - Repository pattern for data access
+```bash
+cd backend
+npm install
+cp .env.example .env
+npx prisma generate
+npx prisma db push
+npx prisma db seed
+npm run dev
+```
 
-3. **Database (PostgreSQL)**
-   - Users table with authentication data
-   - Posts table with user relationships
-   - Sessions for token management
+### Frontend
 
-### Data Flow
+```bash
+cd frontend
+npm install
+cp .env.example .env.local
+npm run dev
+```
 
-1. User interacts with Next.js frontend
-2. Frontend dispatches Redux actions
-3. API client sends requests to Express backend
-4. Backend validates requests and processes with Prisma
-5. Responses flow back through the chain
+## Environment Variables
 
-### Design Decisions
+### Backend (.env)
 
-1. **Next.js**: Chosen for SSR capabilities and excellent developer experience
-2. **Redux Toolkit**: Simplified state management with built-in best practices
-3. **Prisma**: Type-safe database queries and migrations
-4. **JWT**: Stateless authentication suitable for REST APIs
-5. **Repository Pattern**: Abstract data access for testability and maintainability
+```env
+DATABASE_URL=postgresql://username:password@host:port/database
+JWT_SECRET=your-jwt-secret
+PORT=3001
+```
+
+### Frontend (.env.local)
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+```
+
+## Design Pattern: Repository Pattern
+
+### Implementation:
+- Separates data access from business logic
+- Centralizes database operations
+- Base repository with CRUD operations
+- Specialized repositories per entity
+
+### Benefits:
+- Easy testing with mocked repositories
+- Database changes don't affect business logic
+- Consistent data access patterns
+- Flexible to change database technology
+
+## System Design Decisions
+
+| Decision               | Justification                              |
+|------------------------|--------------------------------------------|
+| **Separate Frontend/Backend** | Independent deployment, clear APIs        |
+| **JWT Authentication** | Stateless, scalable, mobile-friendly       |
+| **Prisma ORM**          | Type-safe, excellent TypeScript support    |
+| **Redux Toolkit**       | Predictable state, dev tools, async handling |
+| **Component-based UI**  | Reusable, testable, consistent UX         |
+
+## Deployment
+
+### Backend (Render)
+- **Build Command**: 
+  ```bash
+  cd backend && npm install && npx prisma generate && npm run build
+  ```
+- **Start Command**: 
+  ```bash
+  npm start
+  ```
+
+### Frontend (Vercel)
+- **Framework**: Next.js
+- **Root Directory**: frontend
+
+## Project Structure
+
+```
+blog-platform/
+├── frontend/
+├── backend/
+│   ├── src/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── repositories/
+│   │   └── middleware/
+│   └── prisma/
+└── .github/workflows/
+```
+
+## Features
+- User registration and authentication
+- Create, read, update, delete blog posts
+- Draft vs published posts
+- Author-based permissions
+- Responsive design
+- RESTful API

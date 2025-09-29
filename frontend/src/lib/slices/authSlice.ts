@@ -25,7 +25,6 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Async thunks
 export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData: { name: string; email: string; password: string }, { rejectWithValue }) => {
@@ -88,7 +87,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -109,7 +107,6 @@ const authSlice = createSlice({
         state.error = action.payload as string;
         state.isAuthenticated = false;
       })
-      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -130,7 +127,6 @@ const authSlice = createSlice({
         state.error = action.payload as string;
         state.isAuthenticated = false;
       })
-      // Logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.token = null;
@@ -142,7 +138,6 @@ const authSlice = createSlice({
           localStorage.removeItem('token');
         }
       })
-      // Get Current User
       .addCase(getCurrentUser.pending, (state) => {
         state.loading = true;
       })

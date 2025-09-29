@@ -31,8 +31,6 @@ export default function EditPostPage() {
       router.push('/login');
       return;
     }
-
-    // Check if current user is the author
     if (currentPost && user?.id !== currentPost.authorId) {
       router.push('/posts');
     }

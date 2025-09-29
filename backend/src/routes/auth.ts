@@ -7,7 +7,6 @@ import { body } from 'express-validator';
 const router = express.Router();
 const authService = new AuthService(prisma);
 
-// Register
 router.post('/register', 
   [
     body('email').isEmail().normalizeEmail(),
@@ -26,7 +25,6 @@ router.post('/register',
   }
 );
 
-// Login
 router.post('/login',
   [
     body('email').isEmail().normalizeEmail(),
@@ -44,7 +42,6 @@ router.post('/login',
   }
 );
 
-// Logout
 router.post('/logout', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -57,7 +54,6 @@ router.post('/logout', async (req: Request, res: Response, next: NextFunction) =
   }
 });
 
-// Validate token
 router.get('/me', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');

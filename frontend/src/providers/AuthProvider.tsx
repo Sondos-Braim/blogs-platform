@@ -10,7 +10,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    // Check if we have a token but user data is not loaded
     if (token && !user) {
       dispatch(getCurrentUser()).finally(() => {
         setInitialized(true);
@@ -20,7 +19,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [dispatch, token, user]);
 
-  // Show loading state until auth is initialized
   if (!initialized && token) {
     return (
       <div className="min-h-screen flex items-center justify-center">

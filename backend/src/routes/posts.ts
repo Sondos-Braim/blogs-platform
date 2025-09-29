@@ -12,7 +12,6 @@ interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
-// Get all published posts
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const posts = await postService.getAllPublishedPosts();
@@ -22,7 +21,6 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-// Get post by ID
 router.get('/:id',
   [param('id').isString().isLength({ min: 1 })],
   validateRequest,
@@ -39,7 +37,6 @@ router.get('/:id',
   }
 );
 
-// Create new post (authenticated)
 router.post('/',
   authenticate,
   [
@@ -61,7 +58,6 @@ router.post('/',
   }
 );
 
-// Update post (authenticated and author only)
 router.put('/:id',
   authenticate,
   [
@@ -84,7 +80,6 @@ router.put('/:id',
   }
 );
 
-// Delete post (authenticated and author only)
 router.delete('/:id',
   authenticate,
   [param('id').isString().isLength({ min: 1 })],

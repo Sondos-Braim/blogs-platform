@@ -4,7 +4,6 @@ import { UserRepository } from '../repositories/UserRepository';
 import { SessionRepository } from '../repositories/SessionRepository';
 import { PrismaClient, User } from '@prisma/client';
 
-// Interface for sanitized user (without password)
 export interface SanitizedUser {
   id: string;
   email: string;
@@ -23,55 +22,45 @@ export class AuthService {
     this.sessionRepository = new SessionRepository(prisma);
     this.jwtSecret = process.env.JWT_SECRET || 'fallback-secret';
     
-    // Validate JWT secret in production
     if (process.env.NODE_ENV === 'production' && this.jwtSecret === 'fallback-secret') {
       throw new Error('JWT_SECRET must be set in production environment');
     }
   }
 
   async register(email: string, password: string, name: string): Promise<{ user: SanitizedUser; token: string }> {
-    // Check if user already exists
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       throw new Error('User already exists');
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Create user
     const user = await this.userRepository.createUser({
       email,
       password: hashedPassword,
       name
     });
 
-    // Generate token
     const token = this.generateToken(user.id);
 
-    // Create session
     await this.sessionRepository.createSession(user.id, token);
 
     return { user: this.sanitizeUser(user), token };
   }
 
   async login(email: string, password: string): Promise<{ user: SanitizedUser; token: string }> {
-    // Find user
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new Error('Invalid credentials');
     }
 
-    // Check password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       throw new Error('Invalid credentials');
     }
 
-    // Generate token
     const token = this.generateToken(user.id);
 
-    // Create session
     await this.sessionRepository.createSession(user.id, token);
 
     return { user: this.sanitizeUser(user), token };

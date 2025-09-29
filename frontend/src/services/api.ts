@@ -9,7 +9,6 @@ export const api = axios.create({
   },
 });
 
-// Add auth token to requests
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
@@ -25,12 +24,10 @@ api.interceptors.request.use(
   }
 );
 
-// Handle auth errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token');
         window.location.href = '/login';

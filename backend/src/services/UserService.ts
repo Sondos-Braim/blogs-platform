@@ -17,7 +17,6 @@ export class UserService {
       return null;
     }
     
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
@@ -28,13 +27,11 @@ export class UserService {
       return null;
     }
     
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
 
   async updateUser(id: string, updateData: { name?: string; email?: string }): Promise<Omit<User, 'password'> | null> {
-    // Check if email is being updated and if it's already taken
     if (updateData.email) {
       const existingUser = await this.userRepository.findByEmail(updateData.email);
       if (existingUser && existingUser.id !== id) {
@@ -47,7 +44,6 @@ export class UserService {
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userWithoutPassword } = updatedUser;
     return userWithoutPassword;
   }

@@ -21,7 +21,6 @@ export class PostService {
   }
 
   async updatePost(id: string, authorId: string, updateData: any) {
-    // Verify post belongs to author
     const post = await this.postRepository.findById(id);
     if (!post || post.authorId !== authorId) {
       return null;
@@ -31,7 +30,6 @@ export class PostService {
   }
 
   async deletePost(id: string, authorId: string) {
-    // Verify post belongs to author
     const post = await this.postRepository.findById(id);
     if (!post || post.authorId !== authorId) {
       return false;

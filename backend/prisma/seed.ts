@@ -7,10 +7,8 @@ async function main() {
   console.log('🌱 Starting database seed...');
 
   try {
-    // Hash password properly
     const hashedPassword = await bcrypt.hash('password123', 12);
 
-    // Create a test user using create (not upsert) to avoid conflicts
     const user = await prisma.user.create({
       data: {
         email: 'test@example.com',
@@ -19,7 +17,6 @@ async function main() {
       },
     }).catch(async (error) => {
       if (error.code === 'P2002') {
-        // User already exists, find existing user
         console.log('⚠️  User already exists, using existing user...');
         return await prisma.user.findUnique({
           where: { email: 'test@example.com' }
@@ -34,7 +31,6 @@ async function main() {
 
     console.log('✅ User ready:', user.email);
 
-    // Create sample posts
     const post = await prisma.post.create({
       data: {
         title: 'Welcome to Our Blog Platform!',
@@ -46,7 +42,6 @@ async function main() {
 
     console.log('✅ Sample post created:', post.title);
 
-    // Create a few more sample posts
     const additionalPosts = await Promise.all([
       prisma.post.create({
         data: {
@@ -60,7 +55,7 @@ async function main() {
         data: {
           title: 'The Future of Content Creation',
           content: 'Exploring new trends and technologies in the world of blogging and content creation.',
-          published: false, // Draft post
+          published: false,
           authorId: user.id,
         },
       }),

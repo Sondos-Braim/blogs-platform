@@ -10,7 +10,6 @@ import userRoutes from './routes/users';
 
 const app = express();
 
-// Middleware
 app.use(helmet());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
@@ -22,12 +21,10 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 
-// Health check
 app.get('/api/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
@@ -37,7 +34,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API documentation route
 app.get('/api', (req, res) => {
   res.json({
     message: 'Blog Platform API',
@@ -66,10 +62,8 @@ app.get('/api', (req, res) => {
   });
 });
 
-// 404 handler for unmatched routes
 app.use(notFoundHandler);
 
-// Error handling - must be last
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3002;
