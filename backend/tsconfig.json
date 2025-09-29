@@ -12,7 +12,6 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "types": ["node"]
   },
   "include": ["src/**/*", "prisma/**/*"],
   "exclude": ["node_modules", "dist", "coverage", "tests/**/*"]
