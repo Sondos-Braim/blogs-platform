@@ -1,0 +1,142 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Backend Testing
+  backend-test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+        
+    - name: Install Backend Dependencies
+      run: |
+        cd backend
+        npm ci
+        
+    - name: Generate Prisma Client
+      run: |
+        cd backend
+        npx prisma generate
+      
+    - name: Run Backend Tests
+      run: |
+        cd backend
+        npm test
+      env:
+        DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        JWT_SECRET: ${{ secrets.TEST_JWT_SECRET }}
+        NODE_ENV: test
+
+  # Frontend Testing
+  frontend-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: Run Frontend Tests
+      run: |
+        cd frontend
+        npm test
+      env:
+        NEXT_PUBLIC_API_URL: ${{ secrets.PRODUCTION_API_URL || 'http://localhost:3001/api' }}
+        NEXT_PUBLIC_APP_URL: ${{ secrets.PRODUCTION_APP_URL || 'http://localhost:3000' }}
+
+  # Linting
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install Backend Dependencies
+      run: |
+        cd backend
+        npm ci
+        
+    - name: Run Backend Linting
+      run: |
+        cd backend
+        npx tsc --noEmit
+        npx eslint src/ --ext .ts,.tsx
+        
+    - name: Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: Run Frontend Linting
+      run: |
+        cd frontend
+        npx tsc --noEmit
+        npx next lint
+
+  # Build
+  build:
+    runs-on: ubuntu-latest
+    needs: [backend-test, frontend-test, lint]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Build Backend
+      run: |
+        cd backend
+        npm ci
+        npm run build
+        
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm ci
+        npm run build
