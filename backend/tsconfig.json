@@ -1,17 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020"],
+    "module": "commonjs", 
     "outDir": "./dist",
     "rootDir": "./",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "types": ["jest", "node"]
+    "skipLibCheck": true
   },
-  "include": ["src/**/*", "tests/**/*", "prisma/**/*"],
-  "exclude": ["node_modules", "dist", "coverage"]
+  "include": ["src/**/*", "prisma/**/*"]
 }
