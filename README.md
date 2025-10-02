@@ -4,7 +4,7 @@ A full-stack blogging platform with authentication and post management.
 
 ## Live Demo
 - **Frontend**: 
-- **Backend API**: 
+- **Backend API**: https://blogs-platform-e2i8.onrender.com/api/posts
 
 ## Tech Stack
 
