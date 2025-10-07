@@ -3,7 +3,7 @@
 A full-stack blogging platform with authentication and post management.
 
 ## Live Demo
-- **Frontend**: 
+- **Frontend**: https://blogs-platform-jcz3.vercel.app/
 - **Backend API**: https://blogs-platform-e2i8.onrender.com/api/posts
 
 ## Tech Stack
